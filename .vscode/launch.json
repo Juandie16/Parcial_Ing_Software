@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Jugar: La última transmisión",
+      "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/consola.py",
+      "args": ["historias/la_ultima_transmision.json"], "console": "integratedTerminal"
+    },
+    {
+      "name": "Jugar: El faro",
+      "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/consola.py",
+      "args": ["historias/el_faro.json"], "console": "integratedTerminal"
+    },
+    {
+      "name": "Pruebas (pytest)",
+      "type": "debugpy", "request": "launch", "module": "pytest",
+      "args": ["-v"], "console": "integratedTerminal"
+    }
+  ]
+}

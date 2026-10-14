@@ -1,0 +1,1 @@
+Sin commits todavía. Hagan commits con su usuario de Git y vuelvan a ejecutar este script.

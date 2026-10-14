@@ -1,0 +1,19 @@
+{
+  "titulo": "El faro apagado",
+  "inicio": "F1",
+  "variables": {"tiene_linterna": false},
+  "escenas": [
+    {"id": "F1", "texto": "El faro lleva años sin luz. La puerta del almacén está entreabierta y la escalera sube en la oscuridad.", "final": false,
+     "opciones": [
+       {"id": "almacen", "texto": "Entrar al almacén", "destino": "F2", "condiciones": {}, "efectos": {"tiene_linterna": true}},
+       {"id": "subir_oscuras", "texto": "Subir a oscuras", "destino": "F4", "condiciones": {}, "efectos": {}}
+     ]},
+    {"id": "F2", "texto": "Entre cajas viejas encuentras una linterna que aún funciona.", "final": false,
+     "opciones": [
+       {"id": "subir_linterna", "texto": "Subir con la linterna", "destino": "F3", "condiciones": {"tiene_linterna": true}, "efectos": {}},
+       {"id": "rendirse", "texto": "Volver a casa", "destino": "F4", "condiciones": {}, "efectos": {}}
+     ]},
+    {"id": "F3", "texto": "Enciendes la lámpara. El faro vuelve a guiar a los barcos.", "final": true, "opciones": []},
+    {"id": "F4", "texto": "Sin luz ni camino, el faro sigue apagado.", "final": true, "opciones": []}
+  ]
+}
