@@ -62,6 +62,10 @@ python -m pytest -v
 4. Jugar o depurar: panel *Ejecutar y depurar* (`Ctrl+Shift+D`) > «Jugar: La última transmisión» o «Jugar: El faro» > F5.
 5. Pruebas: icono del matraz (*Testing*) o `python -m pytest -v` en la terminal.
 
+## Enlace a video explicativo
+
+https://tecnoutb-my.sharepoint.com/:v:/g/personal/daniecastro_utb_edu_co/IQCg-_s4ZYhHS56Nu0n_FUYQAagLUJh3OBm2v5KD1uDpF64?e=wm7IOB&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D
+
 ## Documentación y evidencias (`docs/`)
 - `informe.md` → `Informe.pdf` (`python docs/build_informe.py`; requiere pandoc, python-docx y LibreOffice) y `Anexo.pdf` (`python docs/build_anexo.py`, requiere reportlab y pillow).
 - `diagramas/` se regenera con `python docs/generar_diagramas.py` (requiere Graphviz y matplotlib).
