@@ -1,1 +1,3 @@
-Sin commits todavía. Hagan commits con su usuario de Git y vuelvan a ejecutar este script.
+8f3c301 | DanieCastro | 2026-10-14 19:42:28 -0500 | Hora 6: requisitos (RF19 -> RF20), modelos, informe, anexo, backlog y trazabilidad del cambio (HEAD -> main, tag: v2-con-cambio, origin/main, origin/HEAD)
+4846588 | DanieCastro | 2026-10-14 19:41:55 -0500 | RF20: deshacer la ultima decision (solicitud de cambio hora 6) con pruebas U6, U5 e I1
+79cf161 | JUAN DIEGO ROSALES | 2026-10-14 00:50:50 -0500 | Versión inicial: motor, pruebas y documentación (borrador generado con asistente de IA, en revisión) (tag: v1-antes-del-cambio)

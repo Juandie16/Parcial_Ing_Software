@@ -8,9 +8,10 @@ class Sesion:
         self.reiniciar()
 
     def reiniciar(self):
-        """Restaura escena y variables iniciales; no conserva nada de la partida anterior."""
+        """Restaura escena y variables iniciales y elimina el historial de retroceso (RF12, RF20)."""
         self._escena_id = self._historia.inicio
         self._variables = dict(self._historia.variables)
+        self._anterior = None  # (escena_id, variables) previos a la última elección válida
 
     @property
     def escena(self):
@@ -36,11 +37,29 @@ class Sesion:
         """Escena no final sin ninguna opción habilitada."""
         return (not self.es_final) and not self.opciones_disponibles()
 
+    @property
+    def puede_deshacer(self):
+        """Hay una última elección válida que todavía no se ha deshecho (RF20)."""
+        return self._anterior is not None
+
     def elegir(self, opcion_id):
-        """Aplica una opción habilitada. Si no existe o no está habilitada, no cambia nada."""
+        """Aplica una opción habilitada. Si no existe o no está habilitada, no cambia nada
+        (tampoco el historial de retroceso)."""
         for o in self.opciones_disponibles():
             if o.id == opcion_id:
+                self._anterior = (self._escena_id, dict(self._variables))
                 self._variables.update(o.efectos)
                 self._escena_id = o.destino
                 return self.escena
         raise ErrorDeEleccion(f"La opción '{opcion_id}' no existe o no está disponible en la escena '{self._escena_id}'.")
+
+    def deshacer(self):
+        """Revierte la última elección válida: restaura la escena y todas las variables previas.
+        Solo un nivel: después de deshacer no hay retroceso hasta una nueva elección válida.
+        Devuelve True si deshizo algo y False si no había nada que deshacer (sin cambios)."""
+        if self._anterior is None:
+            return False
+        self._escena_id, variables = self._anterior
+        self._variables = dict(variables)
+        self._anterior = None
+        return True
