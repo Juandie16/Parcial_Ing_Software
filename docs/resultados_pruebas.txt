@@ -1,4 +1,4 @@
-Ejecución: 2026-10-14T19:39:59
+Ejecución: 2026-10-14T19:43:48
 Comando: python -m pytest -v
 Código de salida: 0
 
@@ -120,4 +120,4 @@ tests/test_validacion.py::test_u4_archivo_ilegible_o_estructura_incorrecta[null]
 tests/test_validacion.py::test_u4_archivo_inexistente PASSED             [ 99%]
 tests/test_validacion.py::test_se_informan_varios_errores_a_la_vez PASSED [100%]
 
-============================= 110 passed in 0.20s ==============================
+============================= 110 passed in 0.25s ==============================

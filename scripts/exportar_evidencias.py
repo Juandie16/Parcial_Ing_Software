@@ -15,7 +15,7 @@ with open("docs/resultados_pruebas.txt", "w", encoding="utf-8") as f:
     f.write(f"Ejecución: {ahora}\nComando: python -m pytest -v\nCódigo de salida: {r.returncode}\n\n{r.stdout}{r.stderr}")
 print("Escrito docs/resultados_pruebas.txt (código de salida", r.returncode, ")")
 
-g = ejecutar(["git", "log", "--date=iso", "--pretty=format:%h | %an | %ad | %s", "--decorate"])
+g = ejecutar(["git", "log", "--date=iso", "--pretty=format:%h | %an | %ad | %s%d"])
 with open("docs/historial_git.txt", "w", encoding="utf-8") as f:
     if g.returncode == 0 and g.stdout.strip():
         f.write(g.stdout + "\n")
