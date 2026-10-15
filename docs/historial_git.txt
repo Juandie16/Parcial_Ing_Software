@@ -1,3 +1,11 @@
-8f3c301 | DanieCastro | 2026-10-14 19:42:28 -0500 | Hora 6: requisitos (RF19 -> RF20), modelos, informe, anexo, backlog y trazabilidad del cambio (HEAD -> main, tag: v2-con-cambio, origin/main, origin/HEAD)
+8ee699d | JUAN DIEGO ROSALES | 2026-10-15 11:36:37 -0500 | Merge branch 'main' of https://github.com/Juandie16/Parcial_Ing_Software (HEAD -> main, origin/main)
+1c53415 | JUAN DIEGO ROSALES | 2026-10-15 11:36:14 -0500 | 	new file:   docs/diagramas/captura_tablero_final.png 	new file:   docs/diagramas/captura_tablero_inicial.png
+a2b0c36 | Juan Diego Rosales Guillen | 2026-10-15 11:22:42 -0500 | Add explanatory video link to README
+fc0dce6 | Juan Diego Rosales Guillen | 2026-10-14 20:13:47 -0500 | Delete docs/backlog.md
+abaabb6 | DanieCastro | 2026-10-14 20:13:10 -0500 | Integrantes y codigos en informe, anexo y README; restaurar version entregada
+06be1cb | JUAN DIEGO ROSALES | 2026-10-14 19:59:14 -0500 | Merge branch 'main' of https://github.com/Juandie16/Parcial_Ing_Software
+54337cc | JUAN DIEGO ROSALES | 2026-10-14 19:51:14 -0500 | Actualizando informe
+40df26b | DanieCastro | 2026-10-14 19:44:18 -0500 | T18: exportar historial de Git (con etiquetas) y resultados de pruebas
+8f3c301 | DanieCastro | 2026-10-14 19:42:28 -0500 | Hora 6: requisitos (RF19 -> RF20), modelos, informe, anexo, backlog y trazabilidad del cambio (tag: v2-con-cambio)
 4846588 | DanieCastro | 2026-10-14 19:41:55 -0500 | RF20: deshacer la ultima decision (solicitud de cambio hora 6) con pruebas U6, U5 e I1
 79cf161 | JUAN DIEGO ROSALES | 2026-10-14 00:50:50 -0500 | Versión inicial: motor, pruebas y documentación (borrador generado con asistente de IA, en revisión) (tag: v1-antes-del-cambio)

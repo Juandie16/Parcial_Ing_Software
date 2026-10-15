@@ -1,12 +1,11 @@
-Ejecución: 2026-10-14T19:43:48
+Ejecución: 2026-10-15T11:47:12
 Comando: python -m pytest -v
 Código de salida: 0
 
-============================= test session starts ==============================
-platform linux -- Python 3.13.16, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python3
+============================= test session starts =============================
+platform win32 -- Python 3.15.0, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\jdros\Downloads\proyecto_motor_v1\la_ultima_transmision\.venv\Scripts\python.exe
 cachedir: .pytest_cache
-rootdir: /home/claude/juandie16/parcial_ing_software
-plugins: anyio-4.15.1
+rootdir: C:\Users\jdros\Downloads\proyecto_motor_v1\la_ultima_transmision
 collecting ... collected 110 items
 
 tests/test_consola.py::test_recorrido_completo_y_fin PASSED              [  0%]
@@ -120,4 +119,4 @@ tests/test_validacion.py::test_u4_archivo_ilegible_o_estructura_incorrecta[null]
 tests/test_validacion.py::test_u4_archivo_inexistente PASSED             [ 99%]
 tests/test_validacion.py::test_se_informan_varios_errores_a_la_vez PASSED [100%]
 
-============================= 110 passed in 0.25s ==============================
+============================= 110 passed in 0.20s =============================
