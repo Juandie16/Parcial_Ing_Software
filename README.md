@@ -1,6 +1,6 @@
 # La última transmisión — motor de historias interactivas
 
-**Integrantes:** _(nombre completo 1)_ y _(nombre completo 2)_
+**Integrantes:** Juan Diego Rosales (T00081640) y Daniel Alejandro Castro (T00080238)
 
 ## Requisitos
 - Python 3.9 o superior

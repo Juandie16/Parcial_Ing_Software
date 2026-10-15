@@ -2,7 +2,7 @@
 title: "Parcial práctico de Ingeniería de Software — La última transmisión"
 ---
 
-**Integrantes:** (nombre completo 1) y (nombre completo 2). **Versión entregada:** motor v1 + cambio de la hora 6 *(completar al recibirlo)*. Los diagramas, la matriz de trazabilidad y las capturas del tablero están en el *Anexo* (A1–A6, B, C).
+**Integrantes:** Juan Diego Rosales (T00081640) y Daniel Alejandro Castro (T00080238). **Versión entregada:** motor v1 (etiqueta `v1-antes-del-cambio`) + cambio de la hora 6: deshacer la última decisión (RF20, etiqueta `v2-con-cambio`). Los diagramas, la matriz de trazabilidad y las capturas del tablero están en el *Anexo* (A1–A6, B, C).
 
 # 1. Fundamentos
 
@@ -110,5 +110,6 @@ La matriz RF/RNF → modelos → componentes → evidencia está en el Anexo B, 
 
 # 11. Aportes, fuentes y herramientas de apoyo
 
+**Aportes por integrante** (según `docs/historial_git.txt`): **Juan Diego Rosales (T00081640):** versión inicial del motor, pruebas y documentación (commit `79cf161`, etiqueta `v1-antes-del-cambio`) y revisión del informe (`54337cc`). **Daniel Alejandro Castro (T00080238):** implementación del cambio de la hora 6, RF20 (`4846588`), actualización de requisitos, modelos y trazabilidad (`8f3c301`, etiqueta `v2-con-cambio`) y exportación de evidencias (`40df26b`). *(Ajustar con las tareas del tablero que hizo cada uno.)*
 
 **Herramientas de IA.** Se usó un asistente de IA (Claude) para generar un primer borrador del motor, las pruebas, los diagramas y los textos de este informe. Cada resultado se verificó ejecutando las pruebas, recorriendo los finales a mano y revisando el código y los documentos entre ambos integrantes; lo no verificado se marcó como pendiente. *(Ajustar esta declaración a lo que realmente hicieron y a las reglas del docente.)* La historia de referencia es del cliente; la segunda historia, `el_faro.json`, fue creada para esta entrega.
