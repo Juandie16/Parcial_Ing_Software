@@ -46,9 +46,10 @@ subgraph cluster_s { label="Motor de historias"; style=dashed; fontname="DejaVu 
   elegir [label="Elegir opción" shape=ellipse];
   cond [label="Evaluar condiciones" shape=ellipse];
   reiniciar [label="Reiniciar partida" shape=ellipse];
+  deshacer [label="Deshacer última\\ndecisión (RF20)" shape=ellipse style=filled fillcolor="#fef3c7"];
   errores [label="Ver errores\\nde contenido" shape=ellipse];
 }
-lec -> cargar; lec -> leer; lec -> elegir; lec -> reiniciar;
+lec -> cargar; lec -> leer; lec -> elegir; lec -> reiniciar; lec -> deshacer;
 esc -> cargar [label="prueba su historia"]; esc -> errores; coo -> errores;
 cargar -> validar [label="«include»" style=dashed];
 leer -> cond [label="«include»" style=dashed];
@@ -62,7 +63,7 @@ rankdir=TB; node [shape=record fontsize=10];
 Historia [label="{Historia|titulo : str\\linicio : str\\lvariables : dict[str,bool]\\lescenas : dict[str,Escena]\\l}"];
 Escena [label="{Escena|id : str\\ltexto : str\\lfinal : bool\\lopciones : tuple[Opcion]\\l}"];
 Opcion [label="{Opcion|id : str\\ltexto : str\\ldestino : str\\lcondiciones : dict[str,bool]\\lefectos : dict[str,bool]\\l}"];
-Sesion [label="{Sesion|- _historia : Historia\\l- _escena_id : str\\l- _variables : dict[str,bool]\\l|+ escena : Escena\\l+ variables : dict\\l+ es_final : bool\\l+ bloqueada : bool\\l+ opciones_disponibles() : list[Opcion]\\l+ elegir(opcion_id) : Escena\\l+ reiniciar()\\l}"];
+Sesion [label="{Sesion|- _historia : Historia\\l- _escena_id : str\\l- _variables : dict[str,bool]\\l- _anterior : (str, dict) \\| None\\l|+ escena : Escena\\l+ variables : dict\\l+ es_final : bool\\l+ bloqueada : bool\\l+ puede_deshacer : bool\\l+ opciones_disponibles() : list[Opcion]\\l+ elegir(opcion_id) : Escena\\l+ reiniciar()\\l+ deshacer() : bool\\l}"];
 Cargador [label="{«módulo» cargador|+ cargar_historia(ruta) : Historia\\l+ construir(datos) : Historia\\l}"];
 Validacion [label="{«módulo» validacion|+ validar(datos) : list[str]\\l}"];
 HI [label="{HistoriaInvalida|errores : list[str]\\l}"];
@@ -93,6 +94,9 @@ EnCurso -> Finalizada [label="elegir(opción habilitada)\\n[destino final] / apl
 EnCurso -> Bloqueada [label="elegir(opción habilitada)\\n[destino sin opciones habilitadas]"];
 Finalizada -> EnCurso [label="reiniciar()"];
 Bloqueada -> EnCurso [label="reiniciar()"];
+Finalizada -> EnCurso [label="deshacer() [hay retroceso]\\n/ restaurar escena y variables\\nprevias; consumir retroceso" color="#b45309" fontcolor="#b45309"];
+Bloqueada -> EnCurso [label="deshacer() [hay retroceso]" color="#b45309" fontcolor="#b45309"];
+EnCurso -> EnCurso [label="deshacer() [hay retroceso] / restaurar estado previo\\ndeshacer() [sin retroceso] / sin cambios" color="#b45309" fontcolor="#b45309" tailport=e headport=e];
 ''')
 
 # 6. Componentes / capas
@@ -103,7 +107,7 @@ subgraph cluster_c { label="Contenido (datos)"; style=dashed; fontname="DejaVu S
 subgraph cluster_i { label="Interfaz"; style=dashed; fontname="DejaVu Sans";
   consola [label="consola.py\\nMuestra escenas y opciones,\\npide la elección, informa errores"]; }
 subgraph cluster_m { label="Motor (reglas, sin interfaz ni contenido)"; style=dashed; fontname="DejaVu Sans";
-  sesion [label="sesion.py\\nEstado de la partida, condiciones,\\nefectos, finales, reinicio"];
+  sesion [label="sesion.py\\nEstado de la partida, condiciones,\\nefectos, finales, reinicio,\\ndeshacer (historial de un nivel)"];
   cargador [label="cargador.py\\nLee JSON y construye el modelo"];
   validacion [label="validacion.py\\nReglas de validación del contenido"];
   modelo [label="modelo.py\\nHistoria, Escena, Opcion (datos)"];
@@ -126,14 +130,15 @@ def secuencia():
         ("Sesion", "Consola", "3: opciones habilitadas", True, None),
         ("Consola", "Sesion", "4: elegir(opcion_id)", False, None),
         ("Sesion", "Sesion", "5: buscar opción entre las habilitadas", False, None),
-        ("Sesion", "Sesion", "6: aplicar efectos a las variables", False, "alt1"),
+        ("Sesion", "Sesion", "6: guardar escena y variables previas (retroceso)", False, "alt1"),
+        ("Sesion", "Sesion", "6b: aplicar efectos a las variables", False, "alt1"),
         ("Sesion", "Historia", "7: escenas[destino]", False, "alt1"),
         ("Historia", "Sesion", "8: escena destino", True, "alt1"),
         ("Sesion", "Consola", "9: escena nueva", True, "alt1"),
-        ("Sesion", "Consola", "10: ErrorDeEleccion (estado sin cambios)", True, "alt2"),
+        ("Sesion", "Consola", "10: ErrorDeEleccion (estado e historial sin cambios)", True, "alt2"),
         ("Consola", "Lector", "11: muestra la escena o el aviso", True, None),
     ]
-    fig, ax = plt.subplots(figsize=(10, 8.6), dpi=130)
+    fig, ax = plt.subplots(figsize=(10, 9.2), dpi=130)
     paso = 0.78
     for p in partes:
         ax.text(x[p], 0.4, p, ha="center", va="bottom", fontsize=10, fontweight="bold",

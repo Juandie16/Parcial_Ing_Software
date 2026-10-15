@@ -13,7 +13,7 @@ python consola.py                                   # historia de referencia
 python consola.py historias/el_faro.json            # segunda historia, mismo motor
 python consola.py historias/otra.json               # cualquier historia válida
 ```
-Se elige una opción escribiendo su número. Al llegar a un final se puede jugar de nuevo.
+Se elige una opción escribiendo su número. Escribiendo `d` se deshace la última decisión (solo un nivel; la opción aparece cuando hay algo que deshacer). Al llegar a un final se puede jugar de nuevo o deshacer.
 
 ## Pruebas
 ```
@@ -38,16 +38,20 @@ python -m pytest -v
 | E5 El eco | Revisar señal → Continuar sin investigar → Activar sin verificar |
 | E6 Silencio | Revisar señal → (cualquiera) → Cortar comunicación |
 
+## Versiones (Git)
+- `v1-antes-del-cambio` — versión disponible al recibir la solicitud de la hora 6.
+- `v2-con-cambio` — con RF20 (deshacer la última decisión).
+
 ## Estructura
 - `motor/modelo.py` — datos (Historia, Escena, Opción)
 - `motor/validacion.py` — reglas de validación del contenido
 - `motor/cargador.py` — lectura de JSON y construcción del modelo
-- `motor/sesion.py` — estado de la partida y reglas de juego
+- `motor/sesion.py` — estado de la partida, reglas de juego y deshacer
 - `consola.py` — interfaz de consola (sin reglas de negocio)
 - `historias/` — contenido; `tests/` — pruebas automatizadas
 
 ## Limitaciones conocidas
-- Sin retroceso ni guardado entre ejecuciones (acuerdo provisional pendiente de aclaración con el cliente).
+- Retroceso de un solo nivel (RF20, solicitud del cliente en la hora 6); no hay rehacer ni guardado entre ejecuciones.
 - No se analizan automáticamente todos los caminos posibles; un bloqueo en juego se informa y permite reiniciar.
 
 ## Trabajar en Visual Studio Code

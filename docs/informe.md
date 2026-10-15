@@ -2,13 +2,13 @@
 title: "Parcial práctico de Ingeniería de Software — La última transmisión"
 ---
 
-**Integrantes:** (nombre completo 1) y (nombre completo 2). **Versión entregada:** motor v1 + cambio de la hora 6 *(completar al recibirlo)*. Los diagramas, la matriz de trazabilidad y las capturas del tablero están en el *Anexo* (A1–A6, B, C).
+**Integrantes:** (nombre completo 1) y (nombre completo 2). **Versión entregada:** motor v1 (etiqueta `v1-antes-del-cambio`) + cambio de la hora 6: deshacer la última decisión (RF20, etiqueta `v2-con-cambio`). Los diagramas, la matriz de trazabilidad y las capturas del tablero están en el *Anexo* (A1–A6, B, C).
 
 # 1. Fundamentos
 
 **Problema.** Un colectivo de escritores necesita publicar ficción interactiva sin depender de programadores: cargar relatos desde archivos, ofrecer opciones condicionadas por lo ocurrido y detectar errores del contenido antes de que lo juegue un lector.
 
-**Actores.** *Escritora* (edita archivos JSON), *Lector* (juega), *Coordinadora del festival* (necesita saber qué corregir), *Diseñador de la experiencia* (define consecuencias). **Alcance:** motor local de consola con reglas booleanas, validación y reinicio. **Fuera de alcance:** cuentas, base de datos, guardado, red, editor visual, audio, imágenes, expresiones y retroceso.
+**Actores.** *Escritora* (edita archivos JSON), *Lector* (juega), *Coordinadora del festival* (necesita saber qué corregir), *Diseñador de la experiencia* (define consecuencias). **Alcance:** motor local de consola con reglas booleanas, validación, reinicio y deshacer la última decisión (desde la hora 6). **Fuera de alcance:** cuentas, base de datos, guardado, red, editor visual, audio, imágenes, expresiones, retroceso de varios niveles y rehacer.
 
 **Riesgos.** (R1) *Contenido inválido que cierra el programa*: se mitiga validando todo al cargar y probando 17 variantes de error (RNF02, RNF03). (R2) *Acoplar el motor a la historia de ejemplo*: se mitiga evaluando condiciones desde los datos, con una segunda historia y una prueba que busca IDs de la historia en el código (RNF01).
 
@@ -48,9 +48,10 @@ Vocabulario común: *historia, escena, opción, condiciones, efectos, variable, 
 | RF16 | N06 | Rechazar finales con opciones y no finales sin opciones | Mensaje con la escena |
 | RF17 | N06 | Informar todos los errores a la vez, con causa y campo o ID | Dos defectos producen al menos dos mensajes |
 | RF18 | N03 | Escena no final sin opciones habilitadas: informar el bloqueo y permitir reiniciar | La consola avisa y ofrece reiniciar |
-| RF19 | N03 | Sin retroceso en la versión 1 | No existe comando de retroceso |
+| ~~RF19~~ | N03 | ~~Sin retroceso en la versión 1~~ — **reemplazado por RF20** en la hora 6 | Vigente solo en `v1-antes-del-cambio` |
+| RF20 | N03 | Deshacer la última elección válida, revirtiendo escena y todas sus consecuencias, con un solo nivel de retroceso (detalle abajo) | CA04: desde E2, investigar → E3 con `conoce_origen` verdadero; deshacer → E2 con `conoce_origen` falso; un segundo deshacer no cambia nada; continuar sin investigar → E3 muestra «Activar sin verificar» y «Cortar comunicación» |
 
-Cobertura: N01→RF01–03; N02→RF04–06; N03→RF07–09, 18, 19; N04→RF10; N05→RF11–12; N06→RF13–17.
+Cobertura: N01→RF01–03; N02→RF04–06; N03→RF07–09, 18, 20; N04→RF10; N05→RF11–12; N06→RF13–17.
 
 | RNF | Medida | Procedimiento y evidencia |
 |---|---|---|
@@ -58,15 +59,17 @@ Cobertura: N01→RF01–03; N02→RF04–06; N03→RF07–09, 18, 19; N04→RF10
 | RNF02 Claridad de errores | 100 % de los 17 casos inválidos nombran el ID o campo; 0 tracebacks | `test_rnf02_*` |
 | RNF03 Confiabilidad | 0 excepciones no controladas ante 17 archivos inválidos y 50 entradas inválidas; estado idéntico antes y después | `test_rnf03_*` (semilla fija) |
 
+**RF20 — Deshacer la última decisión (solicitud de cambio de la hora 6).** Reglas de aceptación: (a) *Restauración:* deshacer restaura exactamente la escena y todas las variables anteriores a la última elección válida. (b) *Un solo nivel:* después de deshacer no se permite otro retroceso hasta una nueva elección válida; no se exige rehacer. (c) *Inicio y reinicio:* al comenzar no hay retroceso; reiniciar elimina el historial y restaura el estado inicial. (d) *Entrada inválida:* una opción inexistente o no habilitada no modifica la sesión ni sustituye el historial de la última elección válida. (e) *Desde un final:* se puede deshacer desde E4, E5 o E6; se regresa a E3 con los valores previos a esa elección. En la consola el lector escribe `d` (la opción solo se muestra cuando hay retroceso disponible); al llegar a un final se ofrece `d` junto a «¿Jugar de nuevo?».
+
 **Preguntas y supuestos.** P1 ¿Variables no declaradas en condiciones o efectos? *Supuesto:* se rechaza al cargar. P2 ¿Entrada que no es opción? *Supuesto:* aviso y se repite la pregunta. P3 ¿`condiciones` y `efectos` obligatorios? *Supuesto:* opcionales; ausentes equivalen a mapas vacíos.
 
-**Conflicto retroceder vs. irreversible.** La escritora pide retroceder siempre; el diseñador, decisiones irreversibles. *Pregunta al cliente:* ¿retroceso en todas las escenas, solo en las marcadas como reversibles, o ninguna; y si lo hay, ¿deshace efectos? *Acuerdo provisional:* la versión 1 no retrocede; reiniciar es la única vuelta, sin presuponer la decisión del cliente.
+**Conflicto retroceder vs. irreversible.** La escritora pide retroceder siempre; el diseñador, decisiones irreversibles. *Pregunta al cliente:* ¿retroceso en todas las escenas, solo en las marcadas como reversibles, o ninguna; y si lo hay, ¿deshace efectos? *Acuerdo provisional:* la versión 1 no retrocede; reiniciar es la única vuelta, sin presuponer la decisión del cliente. **Resolución (hora 6):** el cliente decidió permitir deshacer solo la última decisión, revirtiendo sus efectos (RF20). Así se atiende a la escritora sin anular el peso de las decisiones que pedía el diseñador: solo existe un paso atrás, no se puede encadenar.
 
 **Defecto de requisitos hallado en la revisión cruzada.** *(Sustituir por el hallazgo real de la pareja; ejemplo:)* RF05 decía «opciones válidas», ambiguo entre bien formadas en el archivo y disponibles en el estado actual. Se corrigió con el término *habilitada* y se separó validez del contenido (RF13–16) de disponibilidad en partida (RF05–06).
 
 # 5. Modelado
 
-Los diagramas están en el Anexo con el vocabulario del código. **Contexto (A1):** el sistema se relaciona con tres actores y los archivos de historia. **Casos de uso (A2):** cargar, validar (incluido por cargar), leer escena, elegir (incluye evaluar condiciones), reiniciar y ver errores. **Clases (A3):** `Historia` compone `Escena` y esta compone `Opcion`; `Sesion` mantiene el estado y lanza `ErrorDeEleccion`; el cargador crea el modelo y lanza `HistoriaInvalida`. **Secuencia (A4):** elegir una opción, con la rama de error. **Estados (A5):** una sesión está EnCurso, Finalizada o Bloqueada, y reiniciar vuelve a EnCurso. Si el archivo declara un inicio que ya es final, la sesión nace en Finalizada.
+Los diagramas están en el Anexo con el vocabulario del código. **Contexto (A1):** el sistema se relaciona con tres actores y los archivos de historia. **Casos de uso (A2):** cargar, validar (incluido por cargar), leer escena, elegir (incluye evaluar condiciones), reiniciar, deshacer la última decisión (RF20) y ver errores. **Clases (A3):** `Historia` compone `Escena` y esta compone `Opcion`; `Sesion` mantiene el estado, incluido `_anterior` (escena y variables previas a la última elección válida) con `puede_deshacer` y `deshacer()`, y lanza `ErrorDeEleccion`; el cargador crea el modelo y lanza `HistoriaInvalida`. **Secuencia (A4):** elegir una opción, con la rama de error; al elegir con éxito se guarda el estado previo para el retroceso, y la rama de error no toca el historial. **Estados (A5):** una sesión está EnCurso, Finalizada o Bloqueada, y reiniciar vuelve a EnCurso. `deshacer()` con retroceso disponible lleva de Finalizada, Bloqueada o EnCurso a EnCurso con el estado previo; sin retroceso no cambia nada. Si el archivo declara un inicio que ya es final, la sesión nace en Finalizada.
 
 # 6. Arquitectura
 
@@ -78,15 +81,28 @@ El diagrama de componentes (A6) separa tres capas: **contenido** (`historias/*.j
 
 # 7. Implementación
 
-Python 3, biblioteca estándar y pytest. **Decisión de diseño detallado:** el modelo es inmutable (`dataclass(frozen=True)`) y todo el estado cambiante vive en `Sesion`, que devuelve copias de las variables. Así, ninguna interfaz puede alterar la partida saltándose `elegir`, lo que sostiene RF08 y baja el acoplamiento: la consola depende solo de métodos públicos. **Bibliotecas y licencias:** módulos `json`, `argparse`, `dataclasses` (biblioteca estándar, licencia PSF); `pytest` (MIT); para generar diagramas, Graphviz (EPL) y matplotlib (licencia basada en PSF), solo en desarrollo. Git versiona el trabajo; el historial está en `docs/historial_git.txt`.
+Python 3, biblioteca estándar y pytest. **Decisión de diseño detallado:** el modelo es inmutable (`dataclass(frozen=True)`) y todo el estado cambiante vive en `Sesion`, que devuelve copias de las variables. Así, ninguna interfaz puede alterar la partida saltándose `elegir`, lo que sostiene RF08 y baja el acoplamiento: la consola depende solo de métodos públicos. **Deshacer (RF20):** como solo se exige un nivel, `Sesion` guarda una única instantánea `(escena, copia de variables)` justo antes de aplicar una elección válida; `deshacer()` la restaura y la borra, y `reiniciar()` la elimina. Se descartó una pila de estados o el patrón Comando: añadían complejidad para un requisito de un solo nivel; si el cliente pidiera varios niveles, bastaría cambiar la instantánea por una pila sin tocar la consola. **Bibliotecas y licencias:** módulos `json`, `argparse`, `dataclasses` (biblioteca estándar, licencia PSF); `pytest` (MIT); para generar diagramas, Graphviz (EPL) y matplotlib (licencia basada en PSF), solo en desarrollo. Git versiona el trabajo; el historial está en `docs/historial_git.txt`.
 
 # 8. Verificación
 
-`python -m pytest -v` cubre U1–U5, I1, los criterios CA01–CA03, la consola y los tres RNF. El registro real de la última ejecución está en `docs/resultados_pruebas.txt`. Se recorrieron los tres finales y la segunda historia (grabación incluida en la demostración). **Fallos pendientes:** *(completar con el estado real al cierre; hasta ahora ninguno conocido)*.
+`python -m pytest -v` cubre U1–U6, I1, los criterios CA01–CA04, la consola y los tres RNF (110 pruebas, todas pasan). El registro real de la última ejecución está en `docs/resultados_pruebas.txt`. Se recorrieron los tres finales y la segunda historia (grabación incluida en la demostración). **Pruebas del cambio:** *U6* (`test_motor.py::test_u6_*`): deshacer restaura escena y variables y consume el retroceso; variantes: entrada inválida preserva el historial y nueva elección vuelve a habilitar el retroceso. *U5 extendida* (`test_u5_reiniciar_elimina_historial_de_retroceso`). *I1 extendida* (`test_integracion.py::test_i1_deshacer_desde_un_final_vuelve_a_e3`, para E4, E5 y E6 tras cargar el archivo). *CA04* (`test_ca04_ejemplo_del_cliente`) y consola (`test_deshacer_*`). **Fallos pendientes:** ninguno conocido al cierre.
 
 # 9. Gestión del cambio
 
-*(Se completa al recibir la solicitud de la hora 6.)* Debe registrar: versión de partida (etiqueta de Git), requisitos, modelos, componentes y pruebas afectados, ajustes al backlog, qué cambió y qué evidencia lo demuestra.
+**Solicitud.** El cliente pidió que el lector pueda deshacer su última decisión, revirtiendo todas sus consecuencias; reemplaza el acuerdo provisional de no retroceder. **Versión de partida:** commit `79cf161`, etiqueta `v1-antes-del-cambio`, conservada tal como estaba al recibir la solicitud.
+
+**Análisis de impacto.**
+
+| Elemento | Impacto |
+|---|---|
+| Requisitos | RF19 queda reemplazado; se agrega RF20 con CA04 y las reglas (a)–(e). Se resuelve el conflicto retroceder vs. irreversible (sección 4). |
+| Modelos | A2 (nuevo caso de uso), A3 (`_anterior`, `puede_deshacer`, `deshacer()`), A4 (guardar estado previo al elegir), A5 (transiciones de deshacer), A6 (responsabilidad nueva de `sesion.py`). A1 sin cambios. |
+| Componentes | `motor/sesion.py` (lógica) y `consola.py` (comando `d`). Sin cambios en `modelo.py`, `validacion.py`, `cargador.py`, `errores.py` ni en el formato JSON: las historias existentes siguen siendo válidas (RNF01 se mantiene). |
+| Pruebas | Nueva U6 y variantes; U5 e I1 extendidas; CA04; pruebas de consola. Las 91 pruebas de la versión 1 siguen pasando sin modificarse. |
+| Backlog | T14–T16 pasan de «por definir» a RF20; T13 cerrada con la etiqueta. |
+| Riesgo | Que una entrada inválida o un reinicio dejen un historial incorrecto: cubierto por las variantes de U6 y la extensión de U5. |
+
+**Qué cambió.** `Sesion` guarda el estado previo a cada elección válida y `deshacer()` lo restaura una sola vez; la consola ofrece `d` solo cuando hay retroceso, también en los finales y en un bloqueo. **Evidencia:** `git diff v1-antes-del-cambio..v2-con-cambio --stat` (solo cambian `motor/sesion.py` y `consola.py` en el código), `docs/resultados_pruebas.txt`, `docs/historial_git.txt`, matriz del Anexo B (fila RF20) y la demostración (deshacer desde E3 y desde un final).
 
 # 10. Trazabilidad
 

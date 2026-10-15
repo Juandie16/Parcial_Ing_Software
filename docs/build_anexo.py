@@ -16,10 +16,10 @@ CELB = ParagraphStyle("celb", parent=CEL, fontName="Helvetica-Bold")
 
 FIGURAS = [
     ("A1", "01_contexto", "Diagrama de contexto: actores y archivos de historia alrededor del motor."),
-    ("A2", "02_casos_de_uso", "Casos de uso del motor de historias."),
+    ("A2", "02_casos_de_uso", "Casos de uso del motor de historias (incluye deshacer, RF20)."),
     ("A3", "03_clases", "Clases del dominio y módulos principales (nombres idénticos al código)."),
     ("A4", "04_secuencia_elegir", "Secuencia de elegir una opción, con la rama de error."),
-    ("A5", "05_estados_sesion", "Estados de una sesión de juego."),
+    ("A5", "05_estados_sesion", "Estados de una sesión de juego, con las transiciones de deshacer (RF20)."),
     ("A6", "06_componentes", "Componentes y capas: contenido, motor e interfaz."),
 ]
 
@@ -42,11 +42,13 @@ MATRIZ = [
     ("RF11", "A5", "motor/sesion.py (es_final)", "test_integracion.py::test_i1_*"),
     ("RF13–RF17", "A2, A3", "motor/validacion.py, motor/errores.py", "test_validacion.py::test_u4_*"),
     ("RF18", "A5", "motor/sesion.py (bloqueada)", "test_motor.py::test_escena_bloqueada_*"),
-    ("RF19", "A5 (sin transición de retroceso)", "Sin implementación (decisión documentada)", "Informe, sección 4"),
+    ("RF19 (reemplazado)", "—", "Reemplazado por RF20 en la hora 6; vigente solo en v1-antes-del-cambio", "Informe, secciones 4 y 9"),
     ("RNF01", "A6", "motor/, historias/", "test_rnf.py::test_rnf01_*; salida de git diff --stat"),
     ("RNF02", "A3", "motor/validacion.py, motor/errores.py", "test_rnf.py::test_rnf02_*"),
     ("RNF03", "A5", "motor/sesion.py, motor/cargador.py", "test_rnf.py::test_rnf03_*"),
-    ("RF del cambio", "(completar)", "(completar)", "(completar)"),
+    ("RF20 Deshacer (cambio hora 6)", "A2, A3, A4, A5, A6", "motor/sesion.py (elegir, deshacer, puede_deshacer, reiniciar); consola.py (comando d)",
+     "test_motor.py::test_u6_*, test_ca04_ejemplo_del_cliente, test_u5_reiniciar_elimina_historial_de_retroceso; "
+     "test_integracion.py::test_i1_deshacer_desde_un_final_vuelve_a_e3; test_consola.py::test_deshacer_*, test_al_iniciar_no_se_ofrece_deshacer"),
 ]
 
 
