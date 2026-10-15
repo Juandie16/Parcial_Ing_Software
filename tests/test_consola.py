@@ -27,6 +27,29 @@ def test_reinicio_desde_un_final():
     assert "equipo de rescate" in texto and "mensaje automático antiguo" in texto  # dos partidas distintas
 
 
+def test_deshacer_en_consola_y_segundo_intento_sin_efecto():
+    # E1 -> E2 -> investigar (E3) -> d (E2) -> d (nada) -> continuar (E3) -> activar sin verificar (E5)
+    texto = correr(["1", "1", "d", "d", "2", "1", "n"])
+    assert texto.count("Se deshizo la última decisión.") == 1
+    assert "No hay ninguna decisión para deshacer." in texto
+    assert "mensaje automático antiguo" in texto
+
+
+def test_al_iniciar_no_se_ofrece_deshacer():
+    texto = correr(["d", "1", "1", "2", "n"])
+    assert "No hay ninguna decisión para deshacer." in texto
+    primera_escena = texto.split("La señal incluye")[0]
+    assert "Deshacer la última decisión" not in primera_escena
+
+
+def test_deshacer_desde_un_final_en_consola():
+    # llega a E6, deshace (vuelve a E3) y elige activar con código (E4)
+    texto = correr(["1", "1", "2", "d", "1", "n"])
+    assert "interrumpe la comunicación" in texto
+    assert "Se deshizo la última decisión." in texto
+    assert "equipo de rescate" in texto
+
+
 def test_main_con_archivo_invalido_devuelve_error(tmp_path, capsys):
     ruta = tmp_path / "x.json"
     ruta.write_text("{", encoding="utf-8")

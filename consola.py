@@ -7,27 +7,40 @@ from motor import ErrorDeEleccion, HistoriaInvalida, Sesion, cargar_historia
 RUTA_POR_DEFECTO = "historias/la_ultima_transmision.json"
 
 
+COMANDO_DESHACER = "d"
+
+
 def jugar(historia, entrada=input, salida=print):
     sesion = Sesion(historia)
     salida(f"\n=== {historia.titulo} ===")
     while True:
         salida(f"\n{sesion.escena.texto}")
-        if sesion.es_final:
-            salida("\n-- FIN --")
-            if _preguntar_reinicio(entrada, salida):
+        if sesion.es_final or sesion.bloqueada:
+            if sesion.es_final:
+                salida("\n-- FIN --")
+            else:
+                salida("\n[Bloqueo] Ninguna opción está disponible en esta escena. Revisa el contenido.")
+            accion = _preguntar_al_terminar(sesion, entrada, salida)
+            if accion == "reiniciar":
                 sesion.reiniciar()
                 continue
-            return
-        if sesion.bloqueada:
-            salida("\n[Bloqueo] Ninguna opción está disponible en esta escena. Revisa el contenido.")
-            if _preguntar_reinicio(entrada, salida):
-                sesion.reiniciar()
+            if accion == "deshacer":
+                sesion.deshacer()
+                salida("Se deshizo la última decisión.")
                 continue
             return
         opciones = sesion.opciones_disponibles()
         for n, o in enumerate(opciones, 1):
             salida(f"  {n}. {o.texto}")
-        texto = entrada("> ").strip()
+        if sesion.puede_deshacer:
+            salida(f"  {COMANDO_DESHACER}. Deshacer la última decisión")
+        texto = entrada("> ").strip().lower()
+        if texto == COMANDO_DESHACER:
+            if sesion.deshacer():
+                salida("Se deshizo la última decisión.")
+            else:
+                salida("No hay ninguna decisión para deshacer.")
+            continue
         if not (texto.isdigit() and 1 <= int(texto) <= len(opciones)):
             salida(f"Entrada no válida. Escribe un número entre 1 y {len(opciones)}.")
             continue
@@ -37,8 +50,17 @@ def jugar(historia, entrada=input, salida=print):
             salida(str(e))
 
 
-def _preguntar_reinicio(entrada, salida):
-    return entrada("¿Jugar de nuevo? (s/n) ").strip().lower() in ("s", "si", "sí")
+def _preguntar_al_terminar(sesion, entrada, salida):
+    """Devuelve 'reiniciar', 'deshacer' o 'salir'."""
+    extra = f", {COMANDO_DESHACER} = deshacer la última decisión" if sesion.puede_deshacer else ""
+    while True:
+        r = entrada(f"¿Jugar de nuevo? (s/n{extra}) ").strip().lower()
+        if r == COMANDO_DESHACER:
+            if sesion.puede_deshacer:
+                return "deshacer"
+            salida("No hay ninguna decisión para deshacer.")
+            continue
+        return "reiniciar" if r in ("s", "si", "sí") else "salir"
 
 
 def main(argv=None):
@@ -52,7 +74,10 @@ def main(argv=None):
         for err in e.errores:
             print(f"  - {err}")
         return 1
-    jugar(historia)
+    try:
+        jugar(historia)
+    except (EOFError, KeyboardInterrupt):
+        print("\nPartida terminada por el usuario.")
     return 0
 
 
