@@ -64,7 +64,7 @@ def tabla_matriz():
 
 historia = [Paragraph("Anexo — La última transmisión", H1),
             Paragraph("Contenido: <b>A</b> diagramas (A1–A6), <b>B</b> matriz de trazabilidad, <b>C</b> capturas del tablero. "
-                      "Integrantes: (nombre completo 1) y (nombre completo 2).", ss["Normal"]), Spacer(1, 10)]
+                      "Integrantes: Juan Diego Rosales (T00081640) y Daniel Alejandro Castro (T00080238).", ss["Normal"]), Spacer(1, 10)]
 for cod, nom, txt in FIGURAS[:2]:
     historia.append(figura(cod, nom, txt, alto=9 * cm))
 historia.append(PageBreak())
