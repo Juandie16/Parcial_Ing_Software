@@ -2,7 +2,7 @@
 title: "Parcial práctico de Ingeniería de Software — La última transmisión"
 ---
 
-**Integrantes:** (nombre completo 1) y (nombre completo 2). **Versión entregada:** motor v1 + cambio de la hora 6 *(completar al recibirlo)*. Los diagramas, la matriz de trazabilidad y las capturas del tablero están en el *Anexo* (A1–A6, B, C).
+**Integrantes:** Juan Diego Rosales Guillen y Daniel Castro. **Versión entregada:** motor v1 + cambio de la hora 6 *(completar al recibirlo)*. Los diagramas, la matriz de trazabilidad y las capturas del tablero están en el *Anexo* (A1–A6, B, C).
 
 # 1. Fundamentos
 
@@ -94,6 +94,5 @@ La matriz RF/RNF → modelos → componentes → evidencia está en el Anexo B, 
 
 # 11. Aportes, fuentes y herramientas de apoyo
 
-**Aportes por integrante** *(completar con archivos, tareas y commits reales)*: (nombre 1): …; (nombre 2): ….
 
-**Herramientas de IA.** Se usó un asistente de IA (Claude) para generar un primer borrador del motor, las pruebas, los diagramas y los textos de este informe. Cada resultado se verificó ejecutando las pruebas, recorriendo los finales a mano y revisando el código y los documentos entre ambos integrantes; lo no verificado se marcó como pendiente. *(Ajustar esta declaración a lo que realmente hicieron y a las reglas del docente.)* La historia de referencia es del cliente; la segunda historia, `el_faro.json`, fue creada para esta entrega. No se reutilizaron tutoriales ni fragmentos externos *(confirmar)*.
+**Herramientas de IA.** Se usó un asistente de IA (Claude) para generar un primer borrador del motor, las pruebas, los diagramas y los textos de este informe. Cada resultado se verificó ejecutando las pruebas, recorriendo los finales a mano y revisando el código y los documentos entre ambos integrantes; lo no verificado se marcó como pendiente. *(Ajustar esta declaración a lo que realmente hicieron y a las reglas del docente.)* La historia de referencia es del cliente; la segunda historia, `el_faro.json`, fue creada para esta entrega.
